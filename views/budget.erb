@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>청년참</title>
+  <link rel='stylesheet' id='bootstrap-css'  href='http://kgreens.org/wp-content/themes/wordpress-bootstrap-master/library/css/bootstrap.css?ver=1.0' type='text/css' media='all' />
+
+</head>
+<body>
+<%= erb :header %>
+<div class="row">
+  <% @budgets.each do |p| %>
+      <div class="col-md-8 col-md-offset-2">
+        <div class="well">
+          <div class="media">
+            <p><%= p.created_at %></p>
+
+            <div class="media-body">
+              <a href="/budget_detail/<%= p.id %>">
+                <h4 class="media-heading"><%= p.title %></h4>
+              </a>
+
+              <p><%= p.body %></p>
+            </div>
+          </div>
+        </div>
+      </div>
+  <% end %>
+</div>
+<%= erb :footer %>
+</body>
+</html>

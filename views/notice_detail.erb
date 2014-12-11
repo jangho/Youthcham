@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>청년참</title>
+  <link rel='stylesheet' id='bootstrap-css' href='http://kgreens.org/wp-content/themes/wordpress-bootstrap-master/library/css/bootstrap.css?ver=1.0' type='text/css' media='all'/>
+
+</head>
+<body>
+
+<%= erb :header %>
+
+<div class="row" style="margin-top:100px;margin-bottom:100px;">
+  <div class="col-md-6 col-md-offset-3">
+    <div>
+      <img src="<%= @post.image_src %>">
+      <%= @post.title %>
+      <%= @post.body %>
+    </div>
+
+    <% if (!@user.nil?) %>
+        <p>
+
+        <form action="/write_notice_comment" method="POST">
+          <input name="post_id" type="hidden" value="<%= @post.id %>">
+          <input name="content" type="text" placeholder="댓글 내용을 입력해주세요">
+          <input type="submit" value="등록">
+        </form>
+        </p>
+    <% end %>
+
+    <p>
+      <% @ncomments.each do |c| %>
+        <p>
+          <% u = User.first(:id => c.user_id) %>
+          <% if !u.nil? %>
+              <%= u.c_name %>, <%= u.n_name %> :
+          <% end %>
+          <%= c.content %></p>
+    <% end %>
+    </p>
+  </div>
+</div>
+
+<%= erb :footer %>
+
+</body>
+</html>

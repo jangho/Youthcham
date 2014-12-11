@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>청년참</title>
+  <link rel='stylesheet' id='bootstrap-css'  href='http://kgreens.org/wp-content/themes/wordpress-bootstrap-master/library/css/bootstrap.css?ver=1.0' type='text/css' media='all' />
+
+</head>
+<body>
+<p>관리자페이지입니다.</p>
+<ul>
+  <li>
+    이메일,커뮤니티,닉네임,패스워드계정삭제
+  </li>
+</ul>
+<ul>
+  <li>
+    <% @users.each do |x| %>
+        <%= x.user_email %>,
+        <%= x.c_name %>,
+        <%= x.n_name %>,
+        <%= x.user_password %>,
+        <a href="/user_delete/<%= x.id %>">[x]</a>
+        <br>
+    <% end %>
+  </li>
+</ul>
+<form action="/add_notice_post" method="POST">
+  <p>글 제목을 적어주세요 <input type="text" name="post_title"></p>
+
+  <p>글 내용을 적어주세요 <input type="text" name="post_body"></p>
+
+  <p>이미지링크 <input type="text" name="post_image"/></p>
+  <input type="submit" value="글 등록하기">
+</form>
+<form action="/add_budget_post" method="POST">
+  <p>글 제목을 적어주세요 <input type="text" name="post_title"></p>
+
+  <p>글 내용을 적어주세요 <input type="text" name="post_body"></p>
+
+  <p>이미지링크 <input type="text" name="post_image"/></p>
+  <input type="submit" value="글 등록하기">
+</form>
+</body>
+</html>
