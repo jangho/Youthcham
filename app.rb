@@ -1,9 +1,13 @@
 #encoding=utf-8
-
 require 'sinatra'
+require 'thin'
 require 'data_mapper'
 require 'rest_client'
 require 'date'
+require 'sinatra/flash'
+require 'will_paginate'
+#require 'will_paginate/data_mapper'
+require 'sinatra/reloader' if development?
 
 enable :sessions
 
@@ -23,6 +27,7 @@ class User
   property :admin, Boolean
 
   validates_uniqueness_of :user_email
+  validates_uniqueness_of :n_name
 end
 
 #소식알림판------------------
@@ -33,9 +38,10 @@ class Post
   property :body, Text, :length => 10000000
   property :image_src, String, :length => 10000000
   property :created_at, DateTime
-  property :count, Integer
+#  property :count, Integer
 end
 
+#예산알림판------------------
 class Budget
   include DataMapper::Resource
   property :id, Serial
@@ -43,38 +49,79 @@ class Budget
   property :body, Text, :length => 10000000
   property :image_src, String, :length => 10000000
   property :created_at, DateTime
-  property :count, Integer
+#  property :count, Integer
 end
 
+#커뮤니티소개------------------
+class Community
+  include DataMapper::Resource
+  property :id, Serial
+  property :title, String
+  property :sub_title, String
+  property :body, Text, :length => 10000000
+  property :image_src, String, :length => 10000000
+  property :created_at, DateTime
+end
+
+#댓글
+class Chat
+  include DataMapper::Resource
+  property :id, Serial
+  property :user_id, String
+  property :title, String
+  property :body, Text, :length => 10000000
+  property :image_src, String, :length => 10000000
+  property :created_at, DateTime
+end
+
+#일상 알림판 코멘트
 class Ncomment
   include DataMapper::Resource
   property :id, Serial
   property :content, Text
   property :user_id, Integer
   property :post_id, Integer
+  property :created_at, DateTime
 end
 
+#예산 알림판 코멘트
 class Bcomment
   include DataMapper::Resource
   property :id, Serial
   property :content, Text
   property :user_id, Integer
   property :post_id, Integer
+  property :created_at, DateTime
+end
+
+#잡담 게시판 댓글
+class Comment
+  include DataMapper::Resource
+  property :id, Serial
+  property :content, Text
+  property :user_id, Integer
+  property :post_id, Integer
+  property :created_at, DateTime
 end
 
 DataMapper.finalize
 User.auto_upgrade!
 Post.auto_upgrade!
 Budget.auto_upgrade!
+Community.auto_upgrade!
+Chat.auto_upgrade!
 Ncomment.auto_upgrade!
 Bcomment.auto_upgrade!
-#DataMapper.auto_migrate!
+Comment.auto_upgrade!
+DataMapper.auto_upgrade!
 
 before do
+  @users = User.all
   @user = User.first(:user_email => session[:email])
   @email_name =session[:email]
-  @posts = Post.all
-  @budgets = Budget.all
+  @posts = Post.all.reverse
+  @budgets = Budget.all.reverse
+  @communitys = Community.all.reverse
 end
 
 get '/' do
@@ -91,8 +138,14 @@ get '/budget' do
   erb :budget
 end
 
+#커뮤니티 게시판
+get '/community' do
+  erb :community
+end
+
 #잡담게시판
 get '/chat' do
+  @chats = Chat.all.reverse
   erb :chat
 end
 
@@ -101,9 +154,17 @@ get '/login' do
   erb :login
 end
 
+get '/add_chat' do
+  erb :add_chat
+end
+
 #404 에러
 not_found do
   "404 The page you were looking for doesn't exist. You may have mistyped the address or the page may have moved."
+end
+
+error do
+  'error'
 end
 
 #로그인 프로세스
@@ -113,13 +174,13 @@ post '/login_process' do
 
   md5_user_password = Digest::MD5.hexdigest(params[:user_password])
 
-
   if !database_user.nil?
-
     if database_user.user_password == md5_user_password
       session[:email] = params[:user_email]
     end
   end
+
+  session[:message] = 'Hello World!'
   redirect '/'
 end
 
@@ -149,7 +210,7 @@ post '/join_process' do
   n_user.user_password = md5_password
   n_user.save
 
-  redirect '/'
+  redirect '/login'
 end
 
 #관리자, 유저삭제
@@ -164,7 +225,6 @@ end
 
 #관리자 페이지
 get '/admin' do
-  @users = User.all
   erb :admin
 end
 
@@ -211,10 +271,24 @@ get '/notice_detail/:id' do
   erb :notice_detail
 end
 
+#예산알림판 글보기
 get '/budget_detail/:id' do
   @budget = Budget.first(:id => params[:id])
   @bcomments = Bcomment.all(:post_id => params[:id])
   erb :budget_detail
+end
+
+#커뮤니티 글보기
+get '/community_detail/:id' do
+  @community = Community.first(:id => params[:id])
+  erb :community_detail
+end
+
+#잡담 글보기
+get '/chat_detail/:id' do
+  @chat = Chat.first(:id => params[:id])
+  @comments = Comment.all(:post_id => params[:id])
+  erb :chat_detail
 end
 
 #일상알림판 댓글 작성
@@ -223,24 +297,38 @@ post '/write_notice_comment' do
   p.content = params[:content]
   p.user_id = User.first(:user_email => session[:email]).id
   p.post_id = params[:post_id]
+  p.created_at = params[:created_at]
   p.save
 
   redirect "/notice_detail/#{params[:post_id]}"
 end
 
+#예산알림판 댓글 작성
 post '/write_budget_comment' do
   p = Bcomment.new
   p.content = params[:content]
   p.user_id = User.first(:user_email => session[:email]).id
   p.post_id = params[:post_id]
+  p.created_at = params[:created_at]
   p.save
 
   redirect "/budget_detail/#{params[:post_id]}"
 end
 
+#잡답 댓글 작성
+post '/write_chat_comment' do
+  p = Comment.new
+  p.content = params[:content]
+  p.user_id = User.first(:user_email => session[:email]).id
+  p.post_id = params[:post_id]
+  p.created_at = params[:created_at]
+  p.save
+
+  redirect "/chat_detail/#{params[:post_id]}"
+end
+
 #일상알림판 글쓰기
 post '/add_notice_post' do
-# 날짜 입력폼
   p = Post.new
   p.title = params[:post_title]
   p.body = params[:post_body]
@@ -249,14 +337,29 @@ post '/add_notice_post' do
   if !p.save
     p.errors
   else
-    redirect '/admin'
+    redirect '/notice'
   end
 end
 
+#예산알림판 글쓰기
 post '/add_budget_post' do
-# 날짜 입력폼
   p = Budget.new
   p.title = params[:post_title]
+  p.body = params[:post_body]
+  p.image_src = params[:post_image]
+
+  if !p.save
+    p.errors
+  else
+    redirect '/budget'
+  end
+end
+
+#커뮤니티 등록
+post '/add_community_post' do
+  p = Community.new
+  p.title = params[:post_title]
+  p.sub_title = params[:post_sub_title]
   p.body = params[:post_body]
   p.image_src = params[:post_image]
 
@@ -267,18 +370,34 @@ post '/add_budget_post' do
   end
 end
 
+#잡담 등록
+post '/add_chat_post' do
+  p = Chat.new
+  p.title = params[:post_title]
+  p.user_id = User.first(:user_email => session[:email]).n_name
+  p.body = params[:post_body]
+  p.image_src = params[:post_image]
+
+  if !p.save
+    p.errors
+  else
+    redirect '/chat'
+  end
+end
+
 #런칭시 꼭 삭제 시작---------------------------------
-get '/init_database' do #관리자 생성
+get '/init_database_jhc' do
+  #관리자 생성
   n_user = User.new
   n_user.user_email = "admin@admin.com"
-  md5_password = Digest::MD5.hexdigest("asdf")
+  md5_password = Digest::MD5.hexdigest("wwww")
   n_user.user_password = md5_password
   n_user.c_name = "청년허브"
   n_user.n_name = "관리자"
   n_user.admin = true
   n_user.save
 
-  ## Add Post
+  # 알립니다 임시생성
   1.upto(1) do
     post = Post.new
     post.title = "소식알림 제목입니다"
@@ -287,10 +406,29 @@ get '/init_database' do #관리자 생성
     post.save
   end
 
+  # 예산알림 임시생성
   1.upto(1) do
     post = Budget.new
     post.title = "예산알림 제목입니다"
     post.body = "예산알림 내용입니다"
+    post.image_src = "https://fbcdn-profile-a.akamaihd.net/hprofile-ak-xpf1/v/t1.0-1/10434013_235711903291569_927786159788548594_n.png?oh=88c39f78fa3ce632fd60a21ec0383621&oe=55037DC0&__gda__=1426544874_c3e5f71e953a7b43f094c3f99584ebcf"
+    post.save
+  end
+
+  1.upto(1) do
+    post = Community.new
+    post.title = "커뮤니티 타이틀"
+    post.sub_title = "커뮤니티 서브타이틀"
+    post.body = "커뮤니티소개"
+    post.image_src = "https://fbcdn-profile-a.akamaihd.net/hprofile-ak-xpf1/v/t1.0-1/10434013_235711903291569_927786159788548594_n.png?oh=88c39f78fa3ce632fd60a21ec0383621&oe=55037DC0&__gda__=1426544874_c3e5f71e953a7b43f094c3f99584ebcf"
+    post.save
+  end
+
+  1.upto(1) do
+    post = Chat.new
+    post.title = "잡담"
+    post.body = "잡담의 글"
+    post.user_id = "관리자"
     post.image_src = "https://fbcdn-profile-a.akamaihd.net/hprofile-ak-xpf1/v/t1.0-1/10434013_235711903291569_927786159788548594_n.png?oh=88c39f78fa3ce632fd60a21ec0383621&oe=55037DC0&__gda__=1426544874_c3e5f71e953a7b43f094c3f99584ebcf"
     post.save
   end
@@ -301,10 +439,12 @@ end
 
 #유저 데이터베이스 초기화
 #런칭시 꼭 주석화하기---------------------------------
-get '/destroy_database' do
+get '/destroy_database_jhc' do
   User.all.destroy
   Post.all.destroy
   Budget.all.destroy
+  Community.all.destroy
+  Chat.all.destroy
   session.clear
   redirect '/'
 end

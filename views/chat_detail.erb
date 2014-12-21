@@ -9,44 +9,44 @@
   <link rel="stylesheet" type="text/css" href="../detail.css"/>
 
 </head>
-
-<body class="bg-gray">
+<body>
 
 <%= erb :header %>
+
 <div class="row" style="margin-top:100px;margin-bottom:100px;">
   <div class="col-md-6 col-md-offset-3">
     <div>
-      <p><%= @post.created_at.strftime("%Y-%m-%d") %></p>
+      <p><img src="<%= @chat.image_src %>"></p>
 
-      <p><img src="<%= @post.image_src %>"></p>
-
-      <h2><%= @post.title %></h2>
-
-      <p><%= @post.body %></p>
+      <p><%= @chat.title %></p>
+      <p><%= @chat.user_id %></p>
+      <p><%= @chat.body %></p>
     </div>
+
     <p>
-      <% @ncomments.each do |c| %>
+      <% @comments.each do |c| %>
         <p>
           <% u = User.first(:id => c.user_id) %>
           <% if !u.nil? %>
               <%= u.c_name %>, <%= u.n_name %> :
           <% end %>
           <%= c.content %>, <%= u.created_at.strftime("%Y-%m-%d") %></p>
-
     <% end %>
     </p>
     <% if (!@user.nil?) %>
         <p>
 
-        <form action="/write_notice_comment" method="POST">
-          <input name="post_id" type="hidden" value="<%= @post.id %>">
+        <form action="/write_chat_comment" method="POST">
+          <input name="post_id" type="hidden" value="<%= @chat.id %>">
           <input name="content" type="text" placeholder="댓글 내용을 입력해주세요">
           <input type="submit" value="등록">
         </form>
         </p>
     <% end %>
+
   </div>
 </div>
+
 <%= erb :footer %>
 
 </body>

@@ -2,30 +2,41 @@
 <html>
 <head>
   <title>청년참</title>
-  <link rel='stylesheet' id='bootstrap-css'  href='http://kgreens.org/wp-content/themes/wordpress-bootstrap-master/library/css/bootstrap.css?ver=1.0' type='text/css' media='all' />
-
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="reset.css"/>
+  <link rel="stylesheet" href="main.css"/>
+  <link rel="stylesheet" href="detail.css"/>
 </head>
-<body>
+<body class="bg-gray">
 <%= erb :header %>
-<div class="row">
-  <% @budgets.each do |p| %>
-      <div class="col-md-8 col-md-offset-2">
-        <div class="well">
-          <div class="media">
-            <p><%= p.created_at %></p>
+<section class="section">
+  <div class="container">
+    <h1 class="section-site-title"><p><img src="http://imageshack.com/a/img537/8910/AmKNrM.png"></p>예산공간</h1>
+  </div>
+</section>
 
-            <div class="media-body">
+<% @budgets.each do |p| %>
+    <section class="section">
+      <ul class="list-stripes">
+        <li id="how-do-i-apply">
+          <div class="container">
+            <div class="row">
               <a href="/budget_detail/<%= p.id %>">
-                <h4 class="media-heading"><%= p.title %></h4>
+                <div class="col-sm-4 left-side">
+                  <h4 class="title question"><img src="<%= p.image_src %>" width="100%"></h4>
+                </div>
+                <div class="col-sm-8 user-content"><p><%= p.created_at.strftime("%Y-%m-%d") %></p>
+                  <h2><%= p.title %></h2>
+                  <p><%= p.body %></p>
+                </div>
               </a>
-
-              <p><%= p.body %></p>
             </div>
           </div>
-        </div>
-      </div>
-  <% end %>
-</div>
+        </li>
+      </ul>
+    </section>
+    <hr>
+<% end %>
 <%= erb :footer %>
 </body>
 </html>

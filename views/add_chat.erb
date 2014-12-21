@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+  <title>청년참</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <link rel="stylesheet" href="reset.css"/>
+  <link rel="stylesheet" href="main.css"/>
+  <link rel="stylesheet" href="detail.css"/>
+  <script src="//cdn.ckeditor.com/4.4.6/standard/ckeditor.js"></script>
+
+</head>
+<body>
+<%= erb :header %>
+
+<div class="row">
+  <div class="col-md-8 col-md-offset-2">
+    <div class="well">
+      <div class="media">
+        <div class="media-body">
+          <p>잡담 등록</p>
+
+          <form action="/add_chat_post" method="POST">
+            <p>글 제목을 적어주세요 <input type="text" name="post_title" size=70 maxlength=30></p>
+            <!--<p>글 내용을 적어주세요 <textarea name="post_body" cols="70" rows="4"></textarea></p>-->
+            <textarea name="post_body"></textarea>
+            <script>
+              CKEDITOR.replace( 'post_body' );
+            </script>
+           <!-- <p>이미지링크 <input type="text" name="post_image" size="70"/></p>-->
+            <input type="submit" value="글 등록하기">
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<%= erb :footer %>
+
+</body>
+</html>

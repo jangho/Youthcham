@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>청년참</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <link rel="stylesheet" href="reset.css"/>
+  <link rel="stylesheet" href="main.css"/>
+  <link rel="stylesheet" href="detail.css"/>
+  <link rel="stylesheet" href="sub.css"/>
+</head>
+<body>
+<%= erb :header %>
+
+<section class="section bg-smoke section-jobs">
+  <div class="container">
+
+
+    <div class="row">
+      <% @communitys.each do |p| %>
+
+          <div class="col-md-4 item item-stressed clearfix">
+
+            <a href="/community_detail/<%= p.id %>">
+              <!-- FIX dl just for dropbox -->
+              <img src="<%= p.image_src %>">
+            </a>
+
+            <div class="section-content col-sm-8 col-md-12">
+              <h2 id="jobs" class="section-item-title">
+                <a href="/community_detail/<%= p.id %>"><%= p.title %></a>
+              </h2>
+              <p class="description"><%= p.sub_title %></p>
+            </div>
+
+          </div>
+
+
+      <% end %>
+    </div>
+  </div>
+</section>
+
+<%= erb :footer %>
+</body>
+</html>

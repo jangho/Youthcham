@@ -2,21 +2,37 @@
 <html>
 <head>
   <title>청년참</title>
-  <link rel='stylesheet' id='bootstrap-css' href='http://kgreens.org/wp-content/themes/wordpress-bootstrap-master/library/css/bootstrap.css?ver=1.0' type='text/css' media='all'/>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <link rel="stylesheet" type="text/css" href="../reset.css"/>
+  <link rel="stylesheet" type="text/css" href="../main.css"/>
+  <link rel="stylesheet" type="text/css" href="../detail.css"/>
 
 </head>
-<body>
+<body class="bg-gray">
 
 <%= erb :header %>
-
 <div class="row" style="margin-top:100px;margin-bottom:100px;">
   <div class="col-md-6 col-md-offset-3">
     <div>
-      <img src="<%= @budget.image_src %>">
-      <%= @budget.title %>
-      <%= @budget.body %>
-    </div>
+      <p><%= @budget.created_at.strftime("%Y-%m-%d") %></p>
+      <p><img src="<%= @budget.image_src %>"></p>
 
+      <h2><%= @budget.title %></h2>
+
+      <p><%= @budget.body %></p>
+    </div>
+    <p>
+      <% @bcomments.each do |c| %>
+        <p>
+          <% u = User.first(:id => c.user_id) %>
+          <% if !u.nil? %>
+              <%= u.c_name %>, <%= u.n_name %> :
+          <% end %>
+          <%= c.content %>, <%= u.created_at.strftime("%Y-%m-%d") %></p>
+
+    <% end %>
+    </p>
     <% if (!@user.nil?) %>
         <p>
 
@@ -27,17 +43,6 @@
         </form>
         </p>
     <% end %>
-
-    <p>
-      <% @bcomments.each do |c| %>
-        <p>
-          <% u = User.first(:id => c.user_id) %>
-          <% if !u.nil? %>
-              <%= u.c_name %>, <%= u.n_name %> :
-          <% end %>
-          <%= c.content %></p>
-    <% end %>
-    </p>
   </div>
 </div>
 

@@ -1,35 +1,45 @@
-<nav class="navbar navbar-default" role="navigation">
-  <div class="container-fluid">
-    <!-- Brand and toggle get grouped for better mobile display -->
+<div class="navbar navbar-default" role="navigation">
+  <div class="container">
+
     <div class="navbar-header">
-      <a class="navbar-brand" href="/"><img src="http://imageshack.com/a/img537/9037/FrHosX.png"></a>
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="/">
+        <img src="http://imageshack.com/a/img537/9037/FrHosX.png" alt="Youthcham"/>
+      </a>
     </div>
 
-    <!-- Collect the nav links, forms, and other content for toggling -->
-    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+    <div class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
-        <li><a href="/notice">알립니다</a></li>
+        <li class="item-notice">
+          <a href="/notice">알립니다</a></li>
 
         <% if !session[:email].nil? %>
-            <li><a href="/budget">예산공지</a></li>
+            <li class="item-budget">
+              <a href="/budget">예산공지</a></li>
         <% end %>
-        <li><a href="/">커뮤니티 소개</a></li>
-        <li><a href="/">커뮤니티 일상</a></li>
-        <li><a href="https://www.flickr.com/photos/98964704@N03/sets/">앨범</a></li>
+        <li class="item-community">
+          <a href="/community">커뮤니티 소개</a></li>
+        <li class="item-open-chat">
+          <a href="/chat">커뮤니티 일상</a></li>
+        <li class="item-album">
+          <a href="https://www.flickr.com/photos/98964704@N03/sets">앨범</a></li>
+        <% if !session[:email].nil? %>
+            <li class="item-nickname-logout">
+              <a href="/<%= @user.n_name %>"><%= @user.n_name %></a></li>
+            <li class="item-nickname-logout">
+              <a href="/logout">로그아웃</a></li>
+        <% else %>
+            <li class="item-login-join">
+              <a href="/login">로그인</a></li>
+            <li class="item-login-join">
+              <a href="/join">회원가입</a></li>
+        <% end %>
       </ul>
-      <% if !session[:email].nil? %>
-          <ul class="nav navbar-nav navbar-right">
-            <li><a href="/<%= @user.n_name %>"><%= @user.n_name %></a></li>
-            <li><a href="/logout">로그아웃</a></li>
-          </ul>
-      <% else %>
-          <ul class="nav navbar-nav navbar-right">
-            <li><a href="/login">로그인</a></li>
-            <li><a href="/join">회원가입</a></li>
-          </ul>
-      <% end %>
     </div>
-    <!-- /.navbar-collapse -->
   </div>
-  <!-- /.container-fluid -->
-</nav>
+</div>
