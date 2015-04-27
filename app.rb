@@ -1,7 +1,7 @@
 #encoding=utf-8
 require 'sinatra'
-require 'thin'
 require 'data_mapper'
+require 'thin'
 require 'rest_client'
 require 'date'
 require 'sinatra/flash'
@@ -35,6 +35,7 @@ class Post
   include DataMapper::Resource
   property :id, Serial
   property :title, String
+  property :sub_title, String
   property :body, Text, :length => 10000000
   property :image_src, String, :length => 10000000
   property :created_at, DateTime
@@ -46,6 +47,7 @@ class Budget
   include DataMapper::Resource
   property :id, Serial
   property :title, String
+  property :sub_title, String
   property :body, Text, :length => 10000000
   property :image_src, String, :length => 10000000
   property :created_at, DateTime
@@ -57,10 +59,12 @@ class Community
   include DataMapper::Resource
   property :id, Serial
   property :title, String
-  property :sub_title, String
+  property :url, String
   property :body, Text, :length => 10000000
-  property :image_src, String, :length => 10000000
   property :created_at, DateTime
+  property :sub_title, String,  :length => 1000
+#  property :type, String
+#  property :image_src, String, :length => 10000000
 end
 
 #댓글
@@ -68,6 +72,7 @@ class Chat
   include DataMapper::Resource
   property :id, Serial
   property :user_id, String
+  property :c_id, String
   property :title, String
   property :body, Text, :length => 10000000
   property :image_src, String, :length => 10000000
@@ -80,6 +85,7 @@ class Ncomment
   property :id, Serial
   property :content, Text
   property :user_id, Integer
+  property :c_id, Integer
   property :post_id, Integer
   property :created_at, DateTime
 end
@@ -90,6 +96,7 @@ class Bcomment
   property :id, Serial
   property :content, Text
   property :user_id, Integer
+  property :c_id, Integer
   property :post_id, Integer
   property :created_at, DateTime
 end
@@ -100,6 +107,7 @@ class Comment
   property :id, Serial
   property :content, Text
   property :user_id, Integer
+  property :c_id, Integer
   property :post_id, Integer
   property :created_at, DateTime
 end
@@ -143,6 +151,12 @@ get '/community' do
   erb :community
 end
 
+#모임게시판
+
+get '/day' do
+  erb :day
+end
+
 #잡담게시판
 get '/chat' do
   @chats = Chat.all.reverse
@@ -157,6 +171,19 @@ end
 get '/add_chat' do
   erb :add_chat
 end
+
+get '/add_community' do
+  erb :add_community
+end
+
+get '/add_notice' do
+  erb :add_notice
+end
+
+get '/add_budget' do
+  erb :add_budget
+end
+
 
 #404 에러
 not_found do
@@ -177,11 +204,10 @@ post '/login_process' do
   if !database_user.nil?
     if database_user.user_password == md5_user_password
       session[:email] = params[:user_email]
+      redirect '/'
     end
+    redirect '/login'
   end
-
-  session[:message] = 'Hello World!'
-  redirect '/'
 end
 
 #로그아웃
@@ -214,7 +240,7 @@ post '/join_process' do
 end
 
 #관리자, 유저삭제
-['/admin', "/user_delete/*"].each do |path|
+['/add_notice','/add_budget','/add_community','/admin', "/user_delete/*"].each do |path|
   before path do
     user = User.first(:user_email => session[:email])
     if (user.nil?) or (user.admin != true)
@@ -222,6 +248,17 @@ end
     end
   end
 end
+
+#유저
+['/add_chat','/budget'].each do |path|
+  before path do
+    user = User.first(:user_email => session[:email])
+    if (user.nil?)
+      redirect '/'
+    end
+  end
+end
+
 
 #관리자 페이지
 get '/admin' do
@@ -331,6 +368,7 @@ end
 post '/add_notice_post' do
   p = Post.new
   p.title = params[:post_title]
+  p.sub_title = params[:post_sub_title]
   p.body = params[:post_body]
   p.image_src = params[:post_image]
 
@@ -345,6 +383,7 @@ end
 post '/add_budget_post' do
   p = Budget.new
   p.title = params[:post_title]
+  p.sub_title = params[:post_sub_title]
   p.body = params[:post_body]
   p.image_src = params[:post_image]
 
@@ -359,14 +398,16 @@ end
 post '/add_community_post' do
   p = Community.new
   p.title = params[:post_title]
-  p.sub_title = params[:post_sub_title]
+#  p.sub_title = params[:post_sub_title]
+  p.url = params[:post_url]
+#  p.type = params[:post_type]
   p.body = params[:post_body]
-  p.image_src = params[:post_image]
+#  p.image_src = params[:post_image]
 
   if !p.save
     p.errors
   else
-    redirect '/admin'
+    redirect '/add_community'
   end
 end
 
@@ -374,6 +415,7 @@ end
 post '/add_chat_post' do
   p = Chat.new
   p.title = params[:post_title]
+  p.c_id = User.first(:user_email => session[:email]).c_name
   p.user_id = User.first(:user_email => session[:email]).n_name
   p.body = params[:post_body]
   p.image_src = params[:post_image]
@@ -386,23 +428,37 @@ post '/add_chat_post' do
 end
 
 #런칭시 꼭 삭제 시작---------------------------------
+get '/init_admin_jhc' do
+  #관리자 생성
+  n_user = User.new
+  n_user.user_email = "nextdinos@gmail.com"
+  md5_password = Digest::MD5.hexdigest("sukje1")
+  n_user.user_password = md5_password
+  n_user.c_name = "청년참"
+  n_user.n_name = "매니저"
+  n_user.admin = true
+  n_user.save
+  redirect '/'
+end
+
 get '/init_database_jhc' do
   #관리자 생성
   n_user = User.new
-  n_user.user_email = "admin@admin.com"
-  md5_password = Digest::MD5.hexdigest("wwww")
+  n_user.user_email = "cham@youthhub.kr"
+  md5_password = Digest::MD5.hexdigest("youthhub2015")
   n_user.user_password = md5_password
   n_user.c_name = "청년허브"
-  n_user.n_name = "관리자"
+  n_user.n_name = "청년참"
   n_user.admin = true
   n_user.save
 
+=begin
   # 알립니다 임시생성
   1.upto(1) do
     post = Post.new
     post.title = "소식알림 제목입니다"
     post.body = "소식알림 내용입니다"
-    post.image_src = "https://fbcdn-profile-a.akamaihd.net/hprofile-ak-xpf1/v/t1.0-1/10434013_235711903291569_927786159788548594_n.png?oh=88c39f78fa3ce632fd60a21ec0383621&oe=55037DC0&__gda__=1426544874_c3e5f71e953a7b43f094c3f99584ebcf"
+    post.image_src = "https://scontent-a.xx.fbcdn.net/hphotos-xap1/v/t1.0-9/72820_398308553610666_1901296869_n.png?oh=4663b4271aa8e8c581883ef40252faa3&oe=55337BE5"
     post.save
   end
 
@@ -411,27 +467,21 @@ get '/init_database_jhc' do
     post = Budget.new
     post.title = "예산알림 제목입니다"
     post.body = "예산알림 내용입니다"
-    post.image_src = "https://fbcdn-profile-a.akamaihd.net/hprofile-ak-xpf1/v/t1.0-1/10434013_235711903291569_927786159788548594_n.png?oh=88c39f78fa3ce632fd60a21ec0383621&oe=55037DC0&__gda__=1426544874_c3e5f71e953a7b43f094c3f99584ebcf"
+    post.image_src = "https://scontent-a.xx.fbcdn.net/hphotos-xap1/v/t1.0-9/72820_398308553610666_1901296869_n.png?oh=4663b4271aa8e8c581883ef40252faa3&oe=55337BE5"
     post.save
   end
 
   1.upto(1) do
     post = Community.new
-    post.title = "커뮤니티 타이틀"
-    post.sub_title = "커뮤니티 서브타이틀"
-    post.body = "커뮤니티소개"
-    post.image_src = "https://fbcdn-profile-a.akamaihd.net/hprofile-ak-xpf1/v/t1.0-1/10434013_235711903291569_927786159788548594_n.png?oh=88c39f78fa3ce632fd60a21ec0383621&oe=55037DC0&__gda__=1426544874_c3e5f71e953a7b43f094c3f99584ebcf"
+    post.title = "청년허브"
+    post.sub_title = "청년이 동료를 만나 서로 협력하고 즐겁게 일하는 사회를 만드는 것, 청년허브의 미션입니다."
+    post.body = "스스로 움직이는 청년들이 필요로 하는 것을 파악하고 서로 접점을 만들어 나가며 자원을 연결하려 합니다. 청년문제에서 출발하지만 청년을 통해 생명력 넘치는 사회가 만들어지길 청년허브는 꿈꿉니다."
+    post.url = "http://youthhub.kr"
+    post.type = "청년허브"
+    post.image_src = "https://scontent-a.xx.fbcdn.net/hphotos-xap1/v/t1.0-9/72820_398308553610666_1901296869_n.png?oh=4663b4271aa8e8c581883ef40252faa3&oe=55337BE5"
     post.save
   end
-
-  1.upto(1) do
-    post = Chat.new
-    post.title = "잡담"
-    post.body = "잡담의 글"
-    post.user_id = "관리자"
-    post.image_src = "https://fbcdn-profile-a.akamaihd.net/hprofile-ak-xpf1/v/t1.0-1/10434013_235711903291569_927786159788548594_n.png?oh=88c39f78fa3ce632fd60a21ec0383621&oe=55037DC0&__gda__=1426544874_c3e5f71e953a7b43f094c3f99584ebcf"
-    post.save
-  end
+=end
 
   redirect '/'
 
@@ -440,11 +490,11 @@ end
 #유저 데이터베이스 초기화
 #런칭시 꼭 주석화하기---------------------------------
 get '/destroy_database_jhc' do
-  User.all.destroy
-  Post.all.destroy
-  Budget.all.destroy
-  Community.all.destroy
-  Chat.all.destroy
-  session.clear
+#   User.all.destroy
+#  Post.all.destroy
+#  Budget.all.destroy
+#  Community.all.destroy
+#  Chat.all.destroy
+#  session.clear
   redirect '/'
 end

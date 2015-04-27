@@ -4,42 +4,60 @@
   <title>청년참</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <link rel="stylesheet" href="reset.css"/>
-  <link rel="stylesheet" href="main.css"/>
-  <link rel="stylesheet" href="detail.css"/>
+  <link rel="stylesheet" href="css/reset.css"/>
+  <link rel="stylesheet" href="css/main.css"/>
+  <link rel="stylesheet" href="css/detail.css"/>
 
 </head>
 <body class="bg-gray">
 <%= erb :header %>
 <section class="section">
   <div class="container">
-    <h1 class="section-site-title"><p><img src="http://imageshack.com/a/img903/3843/hBIbVH.png"></p>잡담해요</h1>
+    <h1 class="section-site-title"><p><img src="img/chat_icon.png"></p>잡담해요</h1>
   </div>
 </section>
 
-<div class="row">
-  <div class="col-md-8 col-md-offset-2">
-    <div class="well">
-      <div class="media">
-        <div class="media-body">
-          <% if !@user.nil? %>
-              <p><a href="/add_chat">글쓰기</a></p>
-          <% end %>
+<% if !@user.nil? %>
+    <p><a class="btn btn-primary" href="/add_chat">글쓰기</a></p>
+<% end %>
 
-          <% @chats.each do |p| %>
-              <a href="/chat_detail/<%= p.id %>">
-                <h4 class="media-heading"><%= p.title %></h4>
-              </a>
-
-              <p><%= p.user_id %></p>
-
-              <p><%= p.created_at.strftime("%Y-%m-%d") %></p>
-          <% end %>
-        </div>
+<section class="section section-departments a">
+  <ul class="list-stripes">
+    <li id="how-do-i-apply">
+      <div class="container bg-white">
+        <% @chats.each do |p| %>
+            <div class="row2">
+              <div class="col-sm-4 left-side">
+                <h4 class="title question">
+                  <a href="/chat_detail/<%= p.id %>">
+                    <%= p.title %>
+                  </a>
+                </h4>
+              </div>
+              <div class="col-sm-8 user-content">
+                <%= p.c_id %>
+                <%= p.user_id %>
+              </div>
+              <div class="col-sm-8 user-content">
+                <%= p.created_at.strftime("%Y-%m-%d") %>
+              </div>
+            </div>
+        <% end %>
       </div>
-    </div>
-  </div>
-</div>
+    </li>
+  </ul>
+
+</section>
+
 <%= erb :footer %>
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+<script>window.jQuery || document.write('<script src="https://d3ahn172ndlj85.cloudfront.net/jobs/static/js/vendor/jquery-1.11.0.min.js"><\/script>')</script>
+<script src="https://d3ahn172ndlj85.cloudfront.net/jobs/static/js/vendor/bootstrap.min.js"></script>
+<script type="text/javascript" src="https://d3ahn172ndlj85.cloudfront.net/jobs/static/js/main.min.js"></script>
+
+<script type="text/javascript">window._pageName = 'welcome';</script>
+<script type="text/javascript" src="https://d3ahn172ndlj85.cloudfront.net/jobs/static/js/smooth-scroll.min.js"></script>
+
 </body>
 </html>

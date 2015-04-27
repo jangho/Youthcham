@@ -7,42 +7,13 @@
   <link rel="stylesheet" href="css/reset.css"/>
   <link rel="stylesheet" href="css/main.css"/>
   <link rel="stylesheet" href="css/detail.css"/>
+
 </head>
-<body>
+<body class="bg-gray">
 <%= erb :header %>
 
-<section class="section bg-yellow">
-  <div class="container ">
-    <header>
-      <h1 id="departments" class="section-title">전체보기</h1>
-
-      <p><a class="btn btn-primary" href="http://youthhub.kr/project1#fbsection4" target="_blank">2014 | 2013</a></p>
-      <% if !@user.nil? %>
-          <% if (@user.admin==true) %>
-              <p><a class="btn btn-primary" href="/add_community">커뮤니티 등록</a></p>
-          <% end %>
-      <% end %>
-    </header>
-  </div>
-</section>
-<section class="section bg-yellow section-departments">
-  <div class="row multiline">
-    <% @communitys.each do |p| %>
-        <a class="col-md-4 col-sm-6 clearfix bg-white">
-          <div class="text-center col-sm-12">
-            <h2 class="section-item-title"><%= p.title %></h2>
-
-            <p class="section-item-subtitle"><%= p.url %></p>
-
-            <p class="section-item-subtitle"><%= p.body %></p>
-          </div>
-        </a>
-    <% end %>
-
-  </div>
-</section>
-
 <%= erb :footer %>
+
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
 <script>window.jQuery || document.write('<script src="https://d3ahn172ndlj85.cloudfront.net/jobs/static/js/vendor/jquery-1.11.0.min.js"><\/script>')</script>
 <script src="https://d3ahn172ndlj85.cloudfront.net/jobs/static/js/vendor/bootstrap.min.js"></script>

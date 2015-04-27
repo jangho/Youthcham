@@ -28,7 +28,8 @@
 }
 
 strong, b {
-    font-weight: 500
+    font-weight: bold;
+    font-size: 14px;
 }
 
 .bg-primary-light {
@@ -40,7 +41,7 @@ strong, b {
 }
 
 .bg-yellow {
-    background-color: #e0ac2a
+    background-color: #ffd15f
 }
 
 .bg-orange {
@@ -80,7 +81,7 @@ strong, b {
 }
 
 .bg-primary-light .section-title, .bg-blue-light .section-title, .bg-yellow .section-title, .bg-orange .section-title, .bg-green .section-title, .bg-blue .section-title, .bg-red .section-title, .bg-mud .section-title, .bg-jobdetail .section-title {
-    color: #fff
+    color: #000
 }
 
 .table {
@@ -109,7 +110,7 @@ strong, b {
 }
 
 .section {
-    padding: 30px 0
+    padding: 0 0
 }
 
 .section.tight {
@@ -125,9 +126,8 @@ strong, b {
 }
 
 .section .section-title {
-    font-size: 60px;
+    font-size: 40px;
     font-weight: 900;
-    text-align: center;
     margin-bottom: 25px;
     margin-top: 15px
 }
@@ -139,11 +139,27 @@ strong, b {
     margin-top: 0
 }
 
+.section .section-item-subtitle {
+    font-size: 13px;
+    font-weight: 500;
+    margin-bottom: 22px;
+    margin-top: 0
+}
+
 .section .section-item-title a {
     color: #333
 }
 
+.section .section-item-subtitle a {
+    color: #333
+}
+
 .section .section-item-title a:hover, .section .section-item-title a:active, .section .section-item-title a:focus {
+    color: #318bff;
+    text-decoration: none
+}
+
+.section .section-item-subtitle a:hover, .section .section-item-subtitle a:active, .section .section-item-subtitle a:focus {
     color: #318bff;
     text-decoration: none
 }
@@ -154,6 +170,10 @@ strong, b {
 
 @media (min-width: 992px) {
     .section .section-item-title {
+        margin-top: 32px
+    }
+
+    .section .section-item-subtitle {
         margin-top: 32px
     }
 
@@ -576,11 +596,14 @@ strong, b {
 }
 
 .footer .nav-sub > li li.title {
-    display: block
+    display: block;
+    font-size: 13px;
 }
 
 .footer .nav-sub > li li.title:after {
-    display: none
+    display: none;
+    font-size: 13px;
+
 }
 
 .footer .nav-sub a {
@@ -718,10 +741,9 @@ strong, b {
 }
 
 .departments {
-    background-image: url(https://d3ahn172ndlj85.cloudfront.net/jobs/static/images/layout/departments-sprite.png);
     background-repeat: no-repeat;
-    width: 166px;
-    height: 160px;
+    width: 300px;
+    height: 150px;
     display: block
 }
 
@@ -767,6 +789,10 @@ strong, b {
 
 .section-departments .section-item-title {
     white-space: nowrap
+}
+
+.section-departments a:hover .section-item-subtitle, .section-departments a:active .section-item-subtitle, .section-departments a:focus .section-item-subtitle {
+    color: #318bff
 }
 
 .section-department-intro .section-title {
@@ -923,6 +949,9 @@ strong, b {
 
 @media (min-width: 992px) {
     .section-jobs .section-item-title {
+        font-size: 28px
+    }
+    .section-jobs .section-item-subtitle {
         font-size: 28px
     }
 }
@@ -1153,13 +1182,13 @@ strong, b {
 }
 
 .how-we-work p {
-    font-size: 20px;
-    line-height: 1.5
+    font-size: 13px;
+    line-height: 2
 }
 
 .how-we-work img {
     height: 100%;
-    margin: 7%
+    margin: 7%;
 }
 
 .how-we-work .graphic-ct {
@@ -1169,8 +1198,15 @@ strong, b {
 }
 
 @media (min-width: 992px) {
+    .center-1 {
+        margin-left: 270px;
+    }
+
+    .center-2 {
+        margin-left: 150px;
+    }
+
     .how-we-work {
-        padding: 50px 0;
         text-align: left
     }
 
@@ -1185,7 +1221,8 @@ strong, b {
 
 @media (min-width: 1200px) {
     .how-we-work img {
-        margin: 0 10%
+        margin: 0 10%;
+        margin-left: 250px;
     }
 }
 

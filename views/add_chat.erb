@@ -3,10 +3,9 @@
 <head lang="en">
   <title>청년참</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-
-  <link rel="stylesheet" href="reset.css"/>
-  <link rel="stylesheet" href="main.css"/>
-  <link rel="stylesheet" href="detail.css"/>
+  <link rel="stylesheet" href="css/reset.css"/>
+  <link rel="stylesheet" href="css/main.css"/>
+  <link rel="stylesheet" href="css/detail.css"/>
   <script src="//cdn.ckeditor.com/4.4.6/standard/ckeditor.js"></script>
 
 </head>
@@ -22,12 +21,10 @@
 
           <form action="/add_chat_post" method="POST">
             <p>글 제목을 적어주세요 <input type="text" name="post_title" size=70 maxlength=30></p>
-            <!--<p>글 내용을 적어주세요 <textarea name="post_body" cols="70" rows="4"></textarea></p>-->
             <textarea name="post_body"></textarea>
             <script>
               CKEDITOR.replace( 'post_body' );
             </script>
-           <!-- <p>이미지링크 <input type="text" name="post_image" size="70"/></p>-->
             <input type="submit" value="글 등록하기">
           </form>
         </div>
@@ -36,6 +33,12 @@
   </div>
 </div>
 <%= erb :footer %>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+<script>window.jQuery || document.write('<script src="https://d3ahn172ndlj85.cloudfront.net/jobs/static/js/vendor/jquery-1.11.0.min.js"><\/script>')</script>
+<script src="https://d3ahn172ndlj85.cloudfront.net/jobs/static/js/vendor/bootstrap.min.js"></script>
+<script type="text/javascript" src="https://d3ahn172ndlj85.cloudfront.net/jobs/static/js/main.min.js"></script>
+<script type="text/javascript">window._pageName = 'welcome';</script>
+<script type="text/javascript" src="https://d3ahn172ndlj85.cloudfront.net/jobs/static/js/smooth-scroll.min.js"></script>
 
 </body>
 </html>

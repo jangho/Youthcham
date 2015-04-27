@@ -3,31 +3,37 @@
 <head>
   <title>청년참</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="reset.css"/>
-  <link rel="stylesheet" href="main.css"/>
-  <link rel="stylesheet" href="detail.css"/>
+  <link rel="stylesheet" href="css/reset.css"/>
+  <link rel="stylesheet" href="css/main.css"/>
+  <link rel="stylesheet" href="css/detail.css"/>
 </head>
 <body class="bg-gray">
 <%= erb :header %>
+
 <section class="section">
   <div class="container">
-    <h1 class="section-site-title"><p><img src="http://imageshack.com/a/img537/8910/AmKNrM.png"></p>예산공간</h1>
+    <h1 class="section-site-title"><p><img src="img/pay_icon.png"></p>예산공간</h1>
   </div>
 </section>
+<% if !@user.nil? %>
+    <% if (@user.admin==true) %>
+        <p><a class="btn btn-primary" href="/add_budget">예산알림 등록</a></p>
+    <% end %>
+<% end %>
 
 <% @budgets.each do |p| %>
-    <section class="section">
+    <section class="section section-departments a">
       <ul class="list-stripes">
         <li id="how-do-i-apply">
           <div class="container">
-            <div class="row">
+            <div class="row2">
               <a href="/budget_detail/<%= p.id %>">
-                <div class="col-sm-4 left-side">
-                  <h4 class="title question"><img src="<%= p.image_src %>" width="100%"></h4>
+                <div class="col-sm-6 left-side">
+                  <h4 class="title question"><img src="<%= p.image_src %>" height="300px"></h4>
                 </div>
-                <div class="col-sm-8 user-content"><p><%= p.created_at.strftime("%Y-%m-%d") %></p>
-                  <h2><%= p.title %></h2>
-                  <p><%= p.body %></p>
+                <div class="col-sm-6 user-content"><p><%= p.created_at.strftime("%Y-%m-%d") %></p>
+                  <h1 id="departments" class="section-title"><%= p.title %></h1>
+                  <p><%= p.sub_title %></p>
                 </div>
               </a>
             </div>
@@ -38,5 +44,14 @@
     <hr>
 <% end %>
 <%= erb :footer %>
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+<script>window.jQuery || document.write('<script src="https://d3ahn172ndlj85.cloudfront.net/jobs/static/js/vendor/jquery-1.11.0.min.js"><\/script>')</script>
+<script src="https://d3ahn172ndlj85.cloudfront.net/jobs/static/js/vendor/bootstrap.min.js"></script>
+<script type="text/javascript" src="https://d3ahn172ndlj85.cloudfront.net/jobs/static/js/main.min.js"></script>
+
+<script type="text/javascript">window._pageName = 'welcome';</script>
+<script type="text/javascript" src="https://d3ahn172ndlj85.cloudfront.net/jobs/static/js/smooth-scroll.min.js"></script>
+
 </body>
 </html>

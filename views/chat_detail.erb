@@ -3,10 +3,9 @@
 <head>
   <title>청년참</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-
-  <link rel="stylesheet" type="text/css" href="../reset.css"/>
-  <link rel="stylesheet" type="text/css" href="../main.css"/>
-  <link rel="stylesheet" type="text/css" href="../detail.css"/>
+  <link rel="stylesheet" type="text/css" href="../css/reset.css"/>
+  <link rel="stylesheet" type="text/css" href="../css/main.css"/>
+  <link rel="stylesheet" type="text/css" href="../css/detail.css"/>
 
 </head>
 <body>
@@ -16,9 +15,7 @@
 <div class="row" style="margin-top:100px;margin-bottom:100px;">
   <div class="col-md-6 col-md-offset-3">
     <div>
-      <p><img src="<%= @chat.image_src %>"></p>
-
-      <p><%= @chat.title %></p>
+      <h1 id="departments" class="section-title"><%= @chat.title %></h1>
       <p><%= @chat.user_id %></p>
       <p><%= @chat.body %></p>
     </div>
@@ -38,7 +35,7 @@
 
         <form action="/write_chat_comment" method="POST">
           <input name="post_id" type="hidden" value="<%= @chat.id %>">
-          <input name="content" type="text" placeholder="댓글 내용을 입력해주세요">
+          <input name="content" type="text" placeholder="댓글 내용을 입력해주세요" size="50" maxlength="200">
           <input type="submit" value="등록">
         </form>
         </p>
@@ -48,6 +45,14 @@
 </div>
 
 <%= erb :footer %>
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+<script>window.jQuery || document.write('<script src="https://d3ahn172ndlj85.cloudfront.net/jobs/static/js/vendor/jquery-1.11.0.min.js"><\/script>')</script>
+<script src="https://d3ahn172ndlj85.cloudfront.net/jobs/static/js/vendor/bootstrap.min.js"></script>
+<script type="text/javascript" src="https://d3ahn172ndlj85.cloudfront.net/jobs/static/js/main.min.js"></script>
+
+<script type="text/javascript">window._pageName = 'welcome';</script>
+<script type="text/javascript" src="https://d3ahn172ndlj85.cloudfront.net/jobs/static/js/smooth-scroll.min.js"></script>
 
 </body>
 </html>
