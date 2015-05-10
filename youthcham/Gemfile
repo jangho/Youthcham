@@ -7,6 +7,9 @@ gem 'rails', '4.2.0'
 # for user
 gem 'devise'
 
+# admin
+gem 'activeadmin', github: 'activeadmin'
+
 # Use sqlite3 as the database for Active Record
 gem 'sqlite3'
 # Use SCSS for stylesheets
