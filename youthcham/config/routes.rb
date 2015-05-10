@@ -1,8 +1,14 @@
 Rails.application.routes.draw do
 
+
+  get 'notice/write'
+
+  get 'notice/view'
+
+  devise_for :users
   root 'home#index'
 
-  get '/notice' => 'home#notice'
+  get '/notice' => 'notice#index'
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".

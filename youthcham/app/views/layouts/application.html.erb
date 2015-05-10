@@ -7,8 +7,18 @@
   <%= csrf_meta_tags %>
 </head>
 <body>
+<h1>Youth Cham</h1>
+<p>menus</p>
+<% if user_signed_in? %>
+  <a href="/users/sign_out" data-method="delete">로그아웃</a>
+<% else %>
+  <a href="/users/sign_in">로그인</a>
+  <a href="/users/sign_up">회원가입</a>
+<% end %>
 
 <%= yield %>
+
+<p>footers</p>
 
 </body>
 </html>

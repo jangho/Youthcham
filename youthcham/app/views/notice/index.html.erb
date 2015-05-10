@@ -1,0 +1,9 @@
+<h1>Notice</h1>
+<% @notices.each do |n| %>
+  <ul>
+    <h1><%=n.title%></h1>
+    <h2><%=n.sub_title%></h2>
+    <p><%=n.body%></p>
+    <addr><%=n.created_at%></addr>
+  </ul>
+<% end %>
