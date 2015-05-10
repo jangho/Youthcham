@@ -24,28 +24,28 @@
       <p><%= @post.body %></p>
     </div>
     <p></p>
+
     <div class="container-fluid bg-white">
       <% @ncomments.each do |c| %>
-        <p>
-          <% u = User.first(:id => c.user_id) %>
-          <% if !u.nil? %>
-              <%= u.c_name %> <%= u.n_name %>
-          <% end %>
           <p>
-          : <%= c.content %>
+            <% u = User.first(:id => c.user_id) %>
+            <% if !u.nil? %>
+                <%= u.c_name %> <%= u.n_name %>
+            <% end %>
+
+            : <%= c.content %>
             <%= u.created_at.strftime("%Y-%m-%d") %>
-            </p>
           </p>
 
-    <% end %>
+      <% end %>
     </div>
     <% if (!@user.nil?) %>
         <div class="container-fluid bg-white">
-        <form action="/write_notice_comment" method="POST">
-          <input name="post_id" type="hidden" value="<%= @post.id %>">
-          <input name="content" type="text" placeholder="댓글 내용을 입력해주세요" size="50" maxlength="200">
-          <input type="submit" value="등록">
-        </form>
+          <form action="/write_notice_comment" method="POST">
+            <input name="post_id" type="hidden" value="<%= @post.id %>">
+            <input name="content" type="text" placeholder="댓글 내용을 입력해주세요" size="50" maxlength="200">
+            <input type="submit" value="등록">
+          </form>
         </div>
     <% end %>
   </div>

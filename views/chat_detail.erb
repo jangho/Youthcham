@@ -8,37 +8,45 @@
   <link rel="stylesheet" type="text/css" href="../css/detail.css"/>
 
 </head>
-<body>
+<body class="bg-gray">
 
 <%= erb :header %>
 
 <div class="row" style="margin-top:100px;margin-bottom:100px;">
   <div class="col-md-6 col-md-offset-3">
-    <div>
+    <div class="container-fluid bg-white">
+
       <h1 id="departments" class="section-title"><%= @chat.title %></h1>
+
+
+      <p>조회수: <% @chat.hits %></p>
+
       <p><%= @chat.user_id %></p>
+
       <p><%= @chat.body %></p>
     </div>
+    <p></p>
 
-    <p>
+    <div class="container-fluid bg-white">
       <% @comments.each do |c| %>
-        <p>
-          <% u = User.first(:id => c.user_id) %>
-          <% if !u.nil? %>
-              <%= u.c_name %>, <%= u.n_name %> :
-          <% end %>
-          <%= c.content %>, <%= u.created_at.strftime("%Y-%m-%d") %></p>
-    <% end %>
-    </p>
-    <% if (!@user.nil?) %>
-        <p>
+          <p>
+            <% u = User.first(:id => c.user_id) %>
+            <% if !u.nil? %>
+                <%= u.c_name %>, <%= u.n_name %> :
+            <% end %>
 
-        <form action="/write_chat_comment" method="POST">
-          <input name="post_id" type="hidden" value="<%= @chat.id %>">
-          <input name="content" type="text" placeholder="댓글 내용을 입력해주세요" size="50" maxlength="200">
-          <input type="submit" value="등록">
-        </form>
-        </p>
+            <%= c.content %>, <%= u.created_at.strftime("%Y-%m-%d") %>
+          </p>
+      <% end %>
+    </div>
+    <% if (!@user.nil?) %>
+        <div class="container-fluid bg-white">
+          <form action="/write_chat_comment" method="POST">
+            <input name="post_id" type="hidden" value="<%= @chat.id %>">
+            <input name="content" type="text" placeholder="댓글 내용을 입력해주세요" size="50" maxlength="200">
+            <input type="submit" value="등록">
+          </form>
+        </div>
     <% end %>
 
   </div>

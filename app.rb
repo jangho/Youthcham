@@ -39,6 +39,8 @@ class Post
   property :body, Text, :length => 10000000
   property :image_src, String, :length => 10000000
   property :created_at, DateTime
+  property :hits, String
+
 #  property :count, Integer
 end
 
@@ -51,6 +53,7 @@ class Budget
   property :body, Text, :length => 10000000
   property :image_src, String, :length => 10000000
   property :created_at, DateTime
+  property :hits, String
 #  property :count, Integer
 end
 
@@ -62,9 +65,25 @@ class Community
   property :url, String
   property :body, Text, :length => 10000000
   property :created_at, DateTime
-  property :sub_title, String,  :length => 1000
+  property :sub_title, String, :length => 1000
+  property :hits, String
+
 #  property :type, String
 #  property :image_src, String, :length => 10000000
+end
+
+#커뮤니티 데이
+class Day
+  include DataMapper::Resource
+  property :id, Serial
+  property :title, String
+  property :sub_title, String, :length => 1000
+  property :when, String, :length => 1000
+  property :where, String, :length => 1000
+  property :body, Text, :length => 10000000
+  property :image_src, String, :length => 10000000
+  property :created_at, DateTime
+  property :hits, String
 end
 
 #댓글
@@ -77,6 +96,7 @@ class Chat
   property :body, Text, :length => 10000000
   property :image_src, String, :length => 10000000
   property :created_at, DateTime
+  property :hits, String
 end
 
 #일상 알림판 코멘트
@@ -240,7 +260,7 @@ post '/join_process' do
 end
 
 #관리자, 유저삭제
-['/add_notice','/add_budget','/add_community','/admin', "/user_delete/*"].each do |path|
+['/add_notice', '/add_budget', '/add_community', '/admin', "/user_delete/*"].each do |path|
   before path do
     user = User.first(:user_email => session[:email])
     if (user.nil?) or (user.admin != true)
@@ -250,7 +270,7 @@ end
 end
 
 #유저
-['/add_chat','/budget'].each do |path|
+['/add_chat', '/budget'].each do |path|
   before path do
     user = User.first(:user_email => session[:email])
     if (user.nil?)
@@ -371,6 +391,7 @@ post '/add_notice_post' do
   p.sub_title = params[:post_sub_title]
   p.body = params[:post_body]
   p.image_src = params[:post_image]
+  p.hits = p.hits + 1
 
   if !p.save
     p.errors
@@ -386,6 +407,7 @@ post '/add_budget_post' do
   p.sub_title = params[:post_sub_title]
   p.body = params[:post_body]
   p.image_src = params[:post_image]
+  p.hits = p.hits + 1
 
   if !p.save
     p.errors
@@ -419,6 +441,7 @@ post '/add_chat_post' do
   p.user_id = User.first(:user_email => session[:email]).n_name
   p.body = params[:post_body]
   p.image_src = params[:post_image]
+  p.hits = p.hits + 1
 
   if !p.save
     p.errors

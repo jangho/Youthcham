@@ -1,58 +1,44 @@
 <!DOCTYPE html>
 <html>
-<head>
+<head lang="en">
   <title>청년참</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-
   <link rel="stylesheet" href="css/reset.css"/>
   <link rel="stylesheet" href="css/main.css"/>
   <link rel="stylesheet" href="css/detail.css"/>
+  <script src="//cdn.ckeditor.com/4.4.6/standard/ckeditor.js"></script>
 
 </head>
-<body class="bg-gray">
+<body>
 <%= erb :header %>
 
-<section class="section section-departments">
-  <div class="container">
-    <header>
-      <h1 id="departments" class="section-title">오픈 커뮤니티 데이</h1>
-    </header>
-  </div>
-</section>
+<div class="row">
+  <div class="col-md-8 col-md-offset-2">
+    <div class="well">
+      <div class="media">
+        <div class="media-body">
+          <p>커뮤니티 등록</p>
 
-<% if !@user.nil? %>
-    <p><a class="btn btn-primary" href="/add_chat">글쓰기</a></p>
-<% end %>
-
-<section class="section section-departments">
-  <div class="container">
-    <div class="row multiline">
-
-      <a href="/jobs/departments/engineering" class="col-md-4 col-sm-6 clearfix">
-        <figure class="text-center col-sm-12">
-          <i class="departments engineering"></i>
-        </figure>
-        <div class="text-center col-sm-12">
-          <h2 class="section-item-title">일러스트파이</h2>
-
-          <p>귀여운 일러스트 같이 그려요!</p>
-
-          <p>언제 12월 6일 토요일 오후 6시</p>
-
-          <p>어디서 공덕역 늘장 와우북살롱 사슴</p>
+          <form action="/add_community_post" method="POST">
+            <p>커뮤니티 이름을 적어주세요 <input type="text" name="post_title" size="70" maxlength="30"></p>
+            <p>홈페이지/SNS를 적어주세요 <input type="text" name="post_url" size="70" maxlength="100"></p>
+            <textarea name="post_body"></textarea>
+            <script>
+                CKEDITOR.replace( 'post_body' );
+            </script>
+            <input type="submit" value="글 등록하기">
+          </form>
         </div>
-      </a>
+      </div>
     </div>
   </div>
-</section>
+</div>
 
 <%= erb :footer %>
-
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
 <script>window.jQuery || document.write('<script src="https://d3ahn172ndlj85.cloudfront.net/jobs/static/js/vendor/jquery-1.11.0.min.js"><\/script>')</script>
 <script src="https://d3ahn172ndlj85.cloudfront.net/jobs/static/js/vendor/bootstrap.min.js"></script>
 <script type="text/javascript" src="https://d3ahn172ndlj85.cloudfront.net/jobs/static/js/main.min.js"></script>
-
 <script type="text/javascript">window._pageName = 'welcome';</script>
 <script type="text/javascript" src="https://d3ahn172ndlj85.cloudfront.net/jobs/static/js/smooth-scroll.min.js"></script>
 
