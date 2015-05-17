@@ -984,7 +984,7 @@ a, :hover, :active, :focus {
     }
 
     .col-sm-12 {
-        width: 100%
+        width: 100%;
     }
 
     .col-sm-11 {
@@ -1230,7 +1230,7 @@ a, :hover, :active, :focus {
 
     .col-md-4 {
         width: 33.3%;
-        height: 300px;
+        height: 330px;
     }
 
     .col-md-41 {

@@ -12,37 +12,50 @@
 <body class="bg-gray">
 
 <%= erb :header %>
+
 <div class="row" style="margin-top:100px;margin-bottom:100px;">
   <div class="col-md-6 col-md-offset-3">
     <div class="container-fluid bg-white">
-      <p><%= @budget.created_at.strftime("%Y-%m-%d") %></p>
-      <p><img src="<%= @budget.image_src %>" width="500px"></p>
 
-      <h2><%= @budget.title %></h2>
 
-      <p><%= @budget.body %></p>
-    </div>
-    <div class="container-fluid bg-white">
-      <% @bcomments.each do |c| %>
-        <p>
-          <% u = User.first(:id => c.user_id) %>
-          <% if !u.nil? %>
-              <%= u.c_name %>, <%= u.n_name %> :
-          <% end %>
-          <%= c.content %>, <%= u.created_at.strftime("%Y-%m-%d") %></p>
 
-    <% end %>
+      <p><img src="<%= @day.image_src %>" width="100%"></p>
+
+      <h1 id="departments" class="section-title"><%= @day.title %></h1>
+
+      <p><%= @day.c_id %> <%= @day.user_id %></p>
+
+      <p><%= @day.when %></p>
+
+      <p><%= @day.where %></p>
+
+      <p><%= @day.body %></p>
     </div>
     <p></p>
+
+    <div class="container-fluid bg-white">
+      <% @dcomments.each do |c| %>
+          <p>
+            <% u = User.first(:id => c.user_id) %>
+            <% if !u.nil? %>
+                <%= u.c_name %>, <%= u.n_name %> :
+            <% end %>
+
+            : <%= c.content %>
+            <%= u.created_at.strftime("%Y-%m-%d") %>
+          </p>
+      <% end %>
+    </div>
     <% if (!@user.nil?) %>
         <div class="container-fluid bg-white">
-        <form action="/write_budget_comment" method="POST">
-          <input name="post_id" type="hidden" value="<%= @budget.id %>">
-          <input name="content" type="text" placeholder="댓글 내용을 입력해주세요" size="50" maxlength="200">
-          <input type="submit" value="등록">
-        </form>
+          <form action="/write_chat_comment" method="POST">
+            <input name="post_id" type="hidden" value="<%= @day.id %>">
+            <input name="content" type="text" placeholder="댓글 내용을 입력해주세요" size="50" maxlength="200">
+            <input type="submit" value="등록">
+          </form>
         </div>
     <% end %>
+
   </div>
 </div>
 

@@ -6,7 +6,6 @@ require 'rest_client'
 require 'date'
 require 'sinatra/flash'
 require 'will_paginate'
-#require 'will_paginate/data_mapper'
 require 'sinatra/reloader' if development?
 
 enable :sessions
@@ -39,7 +38,6 @@ class Post
   property :body, Text, :length => 10000000
   property :image_src, String, :length => 10000000
   property :created_at, DateTime
-  property :hits, String
 
 #  property :count, Integer
 end
@@ -53,7 +51,6 @@ class Budget
   property :body, Text, :length => 10000000
   property :image_src, String, :length => 10000000
   property :created_at, DateTime
-  property :hits, String
 #  property :count, Integer
 end
 
@@ -66,7 +63,6 @@ class Community
   property :body, Text, :length => 10000000
   property :created_at, DateTime
   property :sub_title, String, :length => 1000
-  property :hits, String
 
 #  property :type, String
 #  property :image_src, String, :length => 10000000
@@ -77,13 +73,14 @@ class Day
   include DataMapper::Resource
   property :id, Serial
   property :title, String
+  property :user_id, String
+  property :c_id, String
   property :sub_title, String, :length => 1000
   property :when, String, :length => 1000
   property :where, String, :length => 1000
   property :body, Text, :length => 10000000
   property :image_src, String, :length => 10000000
   property :created_at, DateTime
-  property :hits, String
 end
 
 #댓글
@@ -96,7 +93,6 @@ class Chat
   property :body, Text, :length => 10000000
   property :image_src, String, :length => 10000000
   property :created_at, DateTime
-  property :hits, String
 end
 
 #일상 알림판 코멘트
@@ -132,6 +128,17 @@ class Comment
   property :created_at, DateTime
 end
 
+#모임 게시판 댓글
+class Comment
+  include DataMapper::Resource
+  property :id, Serial
+  property :content, Text
+  property :user_id, Integer
+  property :c_id, Integer
+  property :post_id, Integer
+  property :created_at, DateTime
+end
+
 DataMapper.finalize
 User.auto_upgrade!
 Post.auto_upgrade!
@@ -149,7 +156,9 @@ before do
   @email_name =session[:email]
   @posts = Post.all.reverse
   @budgets = Budget.all.reverse
+  @chats = Chat.all.reverse
   @communitys = Community.all.reverse
+  @days = Day.all.reverse
 end
 
 get '/' do
@@ -172,14 +181,12 @@ get '/community' do
 end
 
 #모임게시판
-
 get '/day' do
   erb :day
 end
 
 #잡담게시판
 get '/chat' do
-  @chats = Chat.all.reverse
   erb :chat
 end
 
@@ -188,6 +195,7 @@ get '/login' do
   erb :login
 end
 
+#게시글 추가하기
 get '/add_chat' do
   erb :add_chat
 end
@@ -204,6 +212,9 @@ get '/add_budget' do
   erb :add_budget
 end
 
+get '/add_day' do
+  erb :add_day
+end
 
 #404 에러
 not_found do
@@ -348,6 +359,13 @@ get '/chat_detail/:id' do
   erb :chat_detail
 end
 
+#모임 글보기
+get '/day_detail/:id' do
+  @day = Day.first(:id => params[:id])
+  @dcomments = Comment.all(:post_id => params[:id])
+  erb :day_detail
+end
+
 #일상알림판 댓글 작성
 post '/write_notice_comment' do
   p = Ncomment.new
@@ -384,6 +402,19 @@ post '/write_chat_comment' do
   redirect "/chat_detail/#{params[:post_id]}"
 end
 
+#모임 댓글 작성
+post '/write_day_comment' do
+  p = Comment.new
+  p.content = params[:content]
+  p.user_id = User.first(:user_email => session[:email]).id
+  p.post_id = params[:post_id]
+  p.created_at = params[:created_at]
+  p.save
+
+  redirect "/day_detail/#{params[:post_id]}"
+end
+
+
 #일상알림판 글쓰기
 post '/add_notice_post' do
   p = Post.new
@@ -391,7 +422,6 @@ post '/add_notice_post' do
   p.sub_title = params[:post_sub_title]
   p.body = params[:post_body]
   p.image_src = params[:post_image]
-  p.hits = p.hits + 1
 
   if !p.save
     p.errors
@@ -407,7 +437,6 @@ post '/add_budget_post' do
   p.sub_title = params[:post_sub_title]
   p.body = params[:post_body]
   p.image_src = params[:post_image]
-  p.hits = p.hits + 1
 
   if !p.save
     p.errors
@@ -433,6 +462,26 @@ post '/add_community_post' do
   end
 end
 
+#모임 등록
+post '/add_day_post' do
+  p = Day.new
+  p.title = params[:post_title]
+  p.c_id = User.first(:user_email => session[:email]).c_name
+  p.user_id = User.first(:user_email => session[:email]).n_name
+  p.sub_title = params[:post_sub_title]
+  p.when = params[:post_when]
+  p.where = params[:post_where]
+  p.body = params[:post_body]
+  p.image_src = params[:post_image]
+
+  if !p.save
+    p.errors
+  else
+    redirect '/day'
+  end
+end
+
+
 #잡담 등록
 post '/add_chat_post' do
   p = Chat.new
@@ -441,7 +490,6 @@ post '/add_chat_post' do
   p.user_id = User.first(:user_email => session[:email]).n_name
   p.body = params[:post_body]
   p.image_src = params[:post_image]
-  p.hits = p.hits + 1
 
   if !p.save
     p.errors
@@ -455,7 +503,7 @@ get '/init_admin_jhc' do
   #관리자 생성
   n_user = User.new
   n_user.user_email = "nextdinos@gmail.com"
-  md5_password = Digest::MD5.hexdigest("sukje1")
+  md5_password = Digest::MD5.hexdigest("lkjh1234")
   n_user.user_password = md5_password
   n_user.c_name = "청년참"
   n_user.n_name = "매니저"
@@ -513,11 +561,12 @@ end
 #유저 데이터베이스 초기화
 #런칭시 꼭 주석화하기---------------------------------
 get '/destroy_database_jhc' do
+#  Day.all.destroy
 #   User.all.destroy
 #  Post.all.destroy
 #  Budget.all.destroy
 #  Community.all.destroy
 #  Chat.all.destroy
-#  session.clear
+  session.clear
   redirect '/'
 end

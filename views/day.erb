@@ -7,6 +7,7 @@
   <link rel="stylesheet" href="css/reset.css"/>
   <link rel="stylesheet" href="css/main.css"/>
   <link rel="stylesheet" href="css/detail.css"/>
+  <link rel="icon" href="img/favicon.ico">
 
 </head>
 <body class="bg-gray">
@@ -21,27 +22,27 @@
 </section>
 
 <% if !@user.nil? %>
-    <p><a class="btn btn-primary" href="/add_chat">글쓰기</a></p>
+    <p><a class="btn btn-primary" href="/add_day">글쓰기</a></p>
 <% end %>
 
 <section class="section section-departments">
-  <div class="container">
+  <div class="container space">
     <div class="row multiline">
+      <% @days.each do |p| %>
+          <a href="/day_detail/<%= p.id %>" class="col-md-4 col-sm-6 clearfix">
+            <img src="<%= p.image_src %>" class="img-responsive">
 
-      <a href="/jobs/departments/engineering" class="col-md-4 col-sm-6 clearfix">
-        <figure class="text-center col-sm-12">
-          <i class="departments engineering"></i>
-        </figure>
-        <div class="text-center col-sm-12">
-          <h2 class="section-item-title">일러스트파이</h2>
+            <div class="text-center col-sm-12">
+              <h1><%= p.title %></h1>
 
-          <p>귀여운 일러스트 같이 그려요!</p>
+              <p><%= p.sub_title %></p>
 
-          <p>언제 12월 6일 토요일 오후 6시</p>
+              <p>언제 <%= p.when %></p>
 
-          <p>어디서 공덕역 늘장 와우북살롱 사슴</p>
-        </div>
-      </a>
+              <p>어디서 <%= p.where %></p>
+            </div>
+          </a>
+      <% end %>
     </div>
   </div>
 </section>

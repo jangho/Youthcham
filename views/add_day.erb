@@ -6,6 +6,8 @@
   <link rel="stylesheet" href="css/reset.css"/>
   <link rel="stylesheet" href="css/main.css"/>
   <link rel="stylesheet" href="css/detail.css"/>
+  <link rel="icon" href="img/favicon.ico">
+
   <script src="//cdn.ckeditor.com/4.4.6/standard/ckeditor.js"></script>
 
 </head>
@@ -17,15 +19,22 @@
     <div class="well">
       <div class="media">
         <div class="media-body">
-          <p>커뮤니티 등록</p>
+          <p>모임 등록</p>
 
-          <form action="/add_community_post" method="POST">
-            <p>커뮤니티 이름을 적어주세요 <input type="text" name="post_title" size="70" maxlength="30"></p>
-            <p>홈페이지/SNS를 적어주세요 <input type="text" name="post_url" size="70" maxlength="100"></p>
+          <form action="/add_day_post" method="POST">
+            <p>모임 이름을 적어주세요 <input type="text" name="post_title" size="70" maxlength="30"></p>
+
+            <p>모임의 한줄 설명을 적어주세요 <input type="text" name="post_sub_title" size="70" maxlength="100"></p>
+
+            <p>몇월/일, 요일, 시간을 적어주세요 <input type="text" name="post_when" size="70" maxlength="100"></p>
+
+            <p>장소를 적어주세요 <input type="text" name="post_where" size="70" maxlength="100"></p>
             <textarea name="post_body"></textarea>
             <script>
-                CKEDITOR.replace( 'post_body' );
+                CKEDITOR.replace('post_body');
             </script>
+            <p>메인에 띄울 이미지링크(URL)
+              <input type="text" name="post_image" size="100" value="http://youthcham.kr/img/logo-17.png"/></p>
             <input type="submit" value="글 등록하기">
           </form>
         </div>

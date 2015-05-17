@@ -7,6 +7,8 @@
   <link rel="stylesheet" href="css/reset.css"/>
   <link rel="stylesheet" href="css/main.css"/>
   <link rel="stylesheet" href="css/detail.css"/>
+  <link rel="icon" href="img/favicon.ico">
+
 </head>
 <body>
 <%= erb :header %>
@@ -28,13 +30,14 @@
 <section class="section bg-yellow section-departments">
   <div class="row multiline">
     <% @communitys.each do |p| %>
-        <a class="col-md-4 col-sm-6 clearfix bg-white">
+        <a class="col-md-4 col-sm-6 clearfix bg-white img-responsive">
           <div class="text-center col-sm-12">
-            <h2 class="section-item-title"><%= p.title %></h2>
+            <h1><%= p.title %></h1>
 
             <p class="section-item-subtitle"><%= p.url %></p>
 
-            <p class="section-item-subtitle"><%= p.body %></p>
+            <p class="section-item-subtitle">
+              <<%= p.sub_title %>월><%= p.body %></p>
           </div>
         </a>
     <% end %>

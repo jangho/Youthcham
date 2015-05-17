@@ -6,6 +6,7 @@
   <link rel="stylesheet" type="text/css" href="../css/reset.css"/>
   <link rel="stylesheet" type="text/css" href="../css/main.css"/>
   <link rel="stylesheet" type="text/css" href="../css/detail.css"/>
+  <link rel="icon" href="img/favicon.ico">
 
 </head>
 <body class="bg-gray">
@@ -19,9 +20,7 @@
       <h1 id="departments" class="section-title"><%= @chat.title %></h1>
 
 
-      <p>조회수: <% @chat.hits %></p>
-
-      <p><%= @chat.user_id %></p>
+      <p><%= @chat.c_id %> <%= @chat.user_id %></p>
 
       <p><%= @chat.body %></p>
     </div>

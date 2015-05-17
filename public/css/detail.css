@@ -110,7 +110,11 @@ strong, b {
 }
 
 .section {
-    padding: 0 0
+    padding: 0 0;
+}
+
+.space {
+    margin-bottom: 200px;
 }
 
 .section.tight {
@@ -122,7 +126,7 @@ strong, b {
 }
 
 .section .multiline > [class*=col-] {
-    margin-bottom: 30px
+    margin-bottom: 30px;
 }
 
 .section .section-title {
@@ -522,7 +526,6 @@ strong, b {
 .item-login-join.active > a:after {
     background-color: #3770e2
 }
-
 
 @media (min-width: 768px) {
     .container > .navbar-header {
@@ -951,6 +954,7 @@ strong, b {
     .section-jobs .section-item-title {
         font-size: 28px
     }
+
     .section-jobs .section-item-subtitle {
         font-size: 28px
     }
